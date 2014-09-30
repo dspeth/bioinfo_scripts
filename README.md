@@ -12,5 +12,7 @@ I'm not a shining example of scripting..
 any questions or comments are welcome 
 
 Daan
-d _dot_ speth _at_ science _dot_ ru _dot_ nl
+
+d.speth _at_ science _dot_ ru _dot_ nl
+
 @daanspeth
