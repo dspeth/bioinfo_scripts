@@ -1,4 +1,4 @@
-bundled_scripts
+bioinfo_scripts
 ===============
 
 a collection of scripts I have used in bioinformatic analyses, mostly file (re)formatting
