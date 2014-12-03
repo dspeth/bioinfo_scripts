@@ -35,6 +35,10 @@ my $indel = $ARGV[2];
 my $blast_out = $ARGV[3];
 my $out = $ARGV[4];
 
+if (scalar @ARGV != 5){
+	die "\nA script to correct indels in iontorrent files\n\nrequires 5 arguments\nusage: contigs tab_file_w_broken_ORFS user-defined-outfile\n\n";
+}	
+
 #load fasta into hash
 my %contigs;
 my $header;
