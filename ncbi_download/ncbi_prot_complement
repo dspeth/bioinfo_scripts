@@ -1,0 +1,17 @@
+# the following commands can be used to quickly get a set of the entire protein complement (or gene complement) of organisms available in genbank
+
+
+# download full protein complement of all sequenced organisms avalable in genbank (*.faa files) using rsync 
+# modified from Nick Loman: (https://gist.github.com/nickloman/3974107)
+rsync -av rsync://ftp.ncbi.nlm.nih.gov/genomes/Bacteria --include "*/" --include "*/*.faa" --exclude=* .
+
+# merge protein files per organism and rename to organism name 
+# modified from Nick Loman: https://gist.github.com/nickloman/3974107
+# writes files to .faa files in parent directory of downloaded genome dirs
+find . -mindepth 1 -type d | xargs -L 1 -I '{}' find {} -name "*.faa" | while read i ; do cat "$i" >> `dirname "$i"`.faa ; done
+
+# make a file with all target organisms (I just copy/paste the ncbi taxonomy page of a phylum of choice, with filter "has genome sequence") 
+# target_organisms_list in the command below
+
+# selectively copy the files of organisms of choice to new dir
+ls -lh | grep -F -f target_organisms_list | awk '{print $9}' | xargs -n1 cp -t ../target_dir/
