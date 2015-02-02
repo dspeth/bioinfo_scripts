@@ -1,0 +1,44 @@
+# a few I R commands I have used for manual binning
+# There are more sophisticated ways out there
+
+
+# get the data together
+
+A_all_stats	# output of fasta_to_gc_cov_length_tab.pl
+B_ESOM_bin 	# output of  ESOM_bin_parser.pl
+C_map_ctab 	# tab delimited files of coverage in various conditions I generated these with the CLC mapper
+D_map_kit 
+E_map_tot 
+F_map_gran 
+kmers 		# kmers, calculated using calc.kmerfreq.pl (https://github.com/MadsAlbertsen/miscperlscripts)
+
+
+# merge data into a single dataframe. 
+# I used 'merge()'. easier ways probably exist
+
+
+# plot and explore
+# the values of the aesthetics depend on youtr column names
+require(ggplot2)
+plot <- ggplot(A_source_data, aes(x=GC_content, y=Sequencing_depth, fill=bin, size=Contig_length)) + geom_point(alpha=0.5, shape=21)
+
+
+# based on the plots, select a cluster to bin
+# I used subset, but there are definitely more efficient ways to do this
+# refine the cluster, first just using the plotting as above and finally check using PCA plot of kmer abundance as below
+# PCA refining was necessary for some bins 
+
+
+# PCA plotting of kmer abundance to refine bins defined based on diffcov 
+# modified from Mads albertsen (https://github.com/MadsAlbertsen/)
+# column numbers depend on the data 
+require(vegan)
+rda <- rda(a_bin1[,13:268], data=a_bin1[,1:12], scale=T)
+X_scores <- scores(rda, choices = 1:5)$sites
+a_bin1_all <- cbind(a_bin1, X_scores)
+pairs(a_bin1_all[,269:273], upper.panel=NULL)
+
+# subtracting the binned data from the original dataframe and repeat
+temp <- All_data[!(All_data$Contig %in% bin1$Contig),]
+
+# repeat until no more bins you trust and deem worth the effort are obvious 
