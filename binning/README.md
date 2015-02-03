@@ -5,3 +5,5 @@ The various map files were also generated with CLC, but could also be generated 
 
 There are by now automated tools which do this type of binning for you, but in my experience doing the binning manually was not extremely timeconsuming.
 Also, manual binning gives you a very clear idea about the quality of your data
+
+If I can help with anything related to this content, do not hesitate to contact me
