@@ -1,0 +1,152 @@
+#!/bin/bash
+
+#### a script to iteratively extend 16S sequences from metagenomes
+
+#### only works with the CLCgenomics server software and CLCcommand line tool
+
+
+
+#### this script requires a reference sequence (e.g. a partial 16S) and a file with sequencing reads (e.g. for 16S extension: all reads in a metagenome mapping on the Silva SSU-NR database)
+#### The input has to be CLC-url form
+
+
+#### it will then:
+#### 1) map reads on concensus using stringent parameters (0.95 identity over 0.5 length)
+#### 2) extract mapped reads
+
+## iteratively
+#### 3) assemble extracted reads
+#### 4) extract concensus
+#### 5) re-map all reads (0.95 identity over 0.5 length)
+#### 6) extract mapped reads
+#### 7) repeat 3-6 for 30 (default option) cycles
+
+# make sure to adjust maping and assembly parameters as needed!
+
+# Daan Speth, 2014
+
+
+############################################### usage and parameters ##############################################################
+#### option defaults
+SERVER=microclc # server address, change as needed
+USER=dspeth	# username on server
+PWD=# fill out password key for user
+ITERATE=30
+
+#### options
+while getopts 's:u:p:i:' opt
+do
+
+case $opt in
+s) SERVER=$OPTARG ;;
+u) USER=$OPTARG ;;
+p) PWD=$OPTARG ;;
+i) ITERATE=$OPTARG ;;
+esac
+
+done
+
+#### skip over options
+shift $((OPTIND-1))
+
+#### parameter check
+if [ $# -lt 2 ]
+then
+echo "Usage: $0 [Options] 16S_CLC_URL READS_CLC_URL"
+echo "Options: -s server (default: microclc) | -u username (default: dspeth) | -p password_key (default: pwd key for dspeth) | -i number of iterations the script has to run"
+exit 1
+fi
+
+CONSENSUS_16S="$1"		# CLC url
+READS="$2"				# CLC url
+
+
+################################################ iterative mapping ####################################################################
+
+
+### 1) map reads on consensus
+clcserver -S $SERVER -U $USER -W $PWD -A read_mapping \
+--log false \
+--references $CONSENSUS_16S \
+--output-mode CLUSTER \
+--global-alignment true \
+--mismatch-cost 3 \
+--length-fraction 0.5 \
+--similarity-fraction 0.95 \
+-O out_file \
+-i $READS
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+MAPPING_URL=$(echo ${TEMP:8})
+echo $MAPPING_URL
+
+### 2) extract reads fom mapping
+clcserver -S $SERVER -U $USER -W $PWD -A extract_sequences \
+--log false \
+-i $MAPPING_URL \
+-O out_file
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+MAPPED_READS=$(echo ${TEMP:8})
+echo $MAPPED_READS
+
+
+
+for i in {0..$ITERATE..1}
+
+do
+
+### 1) denovo_assembly
+clcserver -S $SERVER -U $USER -W $PWD -A denovo_assembly \
+--log false \
+--bubblesize-auto false \
+--wordsize-auto false \
+--long-reads-match-cost 3 \
+--long-reads-alignment-mode GLOBAL \
+--minimum-contig-length 500 \
+--wordsize 45 \
+--bubblesize 5000 \
+-O out_file \
+-i $MAPPED_READS
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+ASSEMBLY_URL=$(echo ${TEMP:8})
+echo $ASSEMBLY_URL
+
+### 2) extract consensus sequence
+clcserver -S $SERVER -U $USER -W $PWD -A consensus_sequence_extraction \
+--log false \
+-i $ASSEMBLY_URL \
+-O out_file
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+CONSENSUS_URL=$(echo ${TEMP:8})
+echo $CONSENSUS_URL
+
+### 3) map reads on consensus
+clcserver -S $SERVER -U $USER -W $PWD -A read_mapping \
+--log false \
+--references $CONSENSUS_URL \
+--output-mode CLUSTER \
+--global-alignment true \
+--mismatch-cost 3 \
+--length-fraction 0.5 \
+--similarity-fraction 0.95 \
+-O out_file \
+-i $READS
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+MAPPING_URL=$(echo ${TEMP:8})
+echo $MAPPING_URL
+
+### 4) extract reads fom mapping
+clcserver -S $SERVER -U $USER -W $PWD -A extract_sequences \
+--log false \
+-i $MAPPING_URL \
+-O out_file
+
+TEMP=$(tail -n 2 out_file | grep ClcUrl)
+MAPPED_READS=$(echo ${TEMP:8})
+echo $MAPPED_READS
+
+done
