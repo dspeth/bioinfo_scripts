@@ -23,7 +23,7 @@ use warnings;
 # contigs in fasta format
 # test files (list of proteins with frameshifts, blast file)
 # - blast file
-# - tab separated file with the location of insertions containing columns: contig id, type (Insertion or Deletion), position, nucleotide, annotated feature disrupted
+# - tab separated file with the location of insertions containing columns: contig id, position, type (Insertion or Deletion), nucleotide, annotated feature disrupted
 # also, this indel file should be ordered by indel position, from furthest from the beginning to nearest (n to 1)
 
 # input format should be made less restrictive, but haven thought of a way to do so yet, suggestions welcome @ d.speth at science dot ru dot nl :)
