@@ -52,12 +52,12 @@ open ERRORS, $val or die "no error file provided";
 while (my $line = <ERRORS>){
 		chomp $line;
 		if ($line =~ /NoStop/){
-			$cds_stop = substr($line,-13,-1);							 # extracts gene identifier, modify if identifyer is longer
+			($cds_stop) = ($line =~ /\-\> \[gnl\|Prokka\|(.+)\]/);		 # extracts gene identifier, make sure you annotated w Prokka in compliant mode
 			($contig_length) = ($line =~ /len= (\d+)/); 
 			$stop{$cds_stop} = $contig_length;
 		}
 		elsif ($line =~ /StartCodon/){
-			$cds_start = substr($line,-13,-1); 							# extracts gene identifier, modify if identifyer is longer
+			($cds_start) = ($line =~ /\-\> \[gnl\|Prokka\|(.+)\]/); 	# extracts gene identifier, make sure you annotated w Prokka in compliant mode
 			($contig_length) = ($line =~ /len= (\d+)/); 
 			$start{$cds_start} = $contig_length;
 		}
