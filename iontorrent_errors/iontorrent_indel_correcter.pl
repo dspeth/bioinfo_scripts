@@ -36,7 +36,7 @@ my $blast_out = $ARGV[3];
 my $out = $ARGV[4];
 
 if (scalar @ARGV != 5){
-	die "\nA script to correct indels in iontorrent files\n\nrequires 5 arguments\nusage: contigs tab_file_w_broken_ORFS user-defined-outfile\n\n";
+	die "\nA script to correct indels in iontorrent files\n\nrequires 5 arguments\nusage: contigs BLAST_tab_file table_w_InDels outfile_for_BLAST_subset corrected_contig_outfile\n\n";
 }	
 
 #load fasta into hash
