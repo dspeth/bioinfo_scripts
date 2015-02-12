@@ -68,6 +68,7 @@ close ERRORS;
 
 my @storage;
 my $count = 0;
+my $test;
 
 open TABLE, $tbl or die "no annotation table provided";
 # some general corrections first
@@ -112,7 +113,7 @@ READ: while (my $line = <TABLE>){
 			@storage = ();
 		}	
 		elsif ($line =~ /locus_tag/){
-			my $test = substr($line,-12); 								# extracts gene identifier, modify if identifyer is longer
+			($test) = ($line =~ /locus_tag\t(.+)/);
 			if (exists $start{$test}){									# partial at 5 prime end								
 				my @split_line = split("\t",$storage[0]);	
 				my $five_prime = $split_line[0];
