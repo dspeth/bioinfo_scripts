@@ -73,21 +73,22 @@ open TABLE, $tbl or die "no annotation table provided";
 # some general corrections first
 READ: while (my $line = <TABLE>){
 		chomp $line;
-		$line =~ s/\(\)//; 												# remove double brackets w/o content
-		$line =~ s/\.$//; 												# remove period at the end of line
-		$line =~ s/(gene\t)([A-Z]{3})/$1\L$2\E/;						# change case of gene names to NCBI appropriate
-		$line =~ s/(gene\t)([A-Z])/$1\L$2\E/;							# change case of gene names to NCBI appropriate
-		$line =~ s/proteins/protein/;									# getting rid of some plurals
+		$line =~ s/\(\)//; 						# remove double brackets w/o content
+		$line =~ s/\.$//; 						# remove period at the end of line
+		$line =~ s/(gene\t)([A-Z]{3})/$1\L$2\E/;			# change case of gene names to NCBI appropriate
+		$line =~ s/(gene\t)([A-Z])/$1\L$2\E/;				# change case of gene names to NCBI appropriate
+		$line =~ s/proteins/protein/;					# getting rid of some plurals
 		$line =~ s/subunits/subunit/;
-		$line =~ s/\tunknown protein/\thypothetical protein/;			# saving NCBI the trouble
-		$line =~ s/\:RefSeq\:/\:GenBank\:/;								# NCBI submission can't deal with the combo "AA sequence" & "RefSeq" in one 'inference' line			
-		if ($line =~ /\tscore\t/){										# gets rid of the number of CRISPR repeats, since I can't find out how to annotate those
+		$line =~ s/\tunknown protein/\thypothetical protein/;		# saving NCBI the trouble
+		$line =~ s/\:RefSeq\:/\:GenBank\:/;				# NCBI submission can't deal with the combo "AA sequence" & "RefSeq" in one 'inference' line			
+		if ($line =~ /\tscore\t/){					# gets rid of the number of CRISPR repeats, since I can't find out how to annotate those
 			next READ;
 		}
-		$line =~ s/product\t[Ss]imilar to/product\t/;					# some reference genomes (especially Kuenenia stuttgartiensis) contain a lot of 'similar to' annotations. tbl2asn changes all these to 'hypothetical protein', resulting in fatal errors
+		$line =~ s/product\t[Ss]imilar to/product\t/;			# some reference genomes (especially Kuenenia stuttgartiensis) contain a lot of 'similar to' annotations. tbl2asn changes all these to 'hypothetical protein', resulting in fatal errors
 		$line =~ s/product\t[Ss]trongly similar to/product\t/;
-		$line =~ s/ gene //;											# gets rid of the word gene from product names
-		$line =~ s/\;/ \-/;												# 
+		$line =~ s/ gene //;						# gets rid of the word gene from product names
+		$line =~ s/\;/ \-/;						# exchange semicolon for dash
+		$line =~ s/\[(.+)\]/\($1\)/;					# exchange [] for () while conserving content 
 # add more here as issues pile up
 		
 # now onto the fixing of start and stop codons 
