@@ -1,5 +1,5 @@
-# a few I R commands I have used for manual binning
-# There are more sophisticated ways out there
+# a few R commands I have used for manual binning
+# There are way more sophisticated ways out there I'd recommend using, like Mads Albertsen's multi metagenome workflow
 
 
 # get the data together
@@ -18,7 +18,7 @@ kmers 		# kmers, calculated using calc.kmerfreq.pl (https://github.com/MadsAlber
 
 
 # plot and explore
-# the values of the aesthetics depend on youtr column names
+# the values of the aesthetics depend on your column names
 require(ggplot2)
 plot <- ggplot(A_source_data, aes(x=GC_content, y=Sequencing_depth, fill=bin, size=Contig_length)) + geom_point(alpha=0.5, shape=21)
 
@@ -41,4 +41,5 @@ pairs(a_bin1_all[,269:273], upper.panel=NULL)
 # subtracting the binned data from the original dataframe and repeat
 temp <- All_data[!(All_data$Contig %in% bin1$Contig),]
 
-# repeat until no more bins you trust and deem worth the effort are obvious 
+# after you've substracted a bin, you can repeat the above to substract more bins 
+# repeat until no more bins (you trust and deem worth the effort) are obvious 
