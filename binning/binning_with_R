@@ -43,3 +43,7 @@ temp <- All_data[!(All_data$Contig %in% bin1$Contig),]
 
 # after you've substracted a bin, you can repeat the above to substract more bins 
 # repeat until no more bins (you trust and deem worth the effort) are obvious 
+
+# write the bins into tab delimited text files
+write.table(bin1, file="bin1", sep ="\t", row.names=FALSE, quote=FALSE)
+
