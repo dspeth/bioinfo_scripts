@@ -21,7 +21,7 @@ if (@ARGV != 3){ die "requires 3 arguments:\n\nprotein fasta file\nuser-defined 
 my %prot;
 my $prot_id;
 
-open PROT, $protein_fasta or die "no read file provided";
+open PROT, $protein_fasta or die "no protein fasta file provided";
 while (my $line = <PROT>){
 	chomp $line;
 	my $fc = substr($line, 0, 1);
