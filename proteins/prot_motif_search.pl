@@ -2,19 +2,19 @@
 use strict;
 use warnings;
 
-# a script to get a fasta file of reads that have blast hits against a custom database
+# a script to find a defined motif in a protein sequence.
+# wildcards in the motif should be represented by a . 
 # requires:
 
-if (@ARGV != 3){
-	die "requires 3 arguments:\n\n1) protein fasta file\n2) user-defined motif\n3) user-defined outfile\n\n";
-}
 
 my $protein_fasta = $ARGV[0];
 my $motif = uc $ARGV[1];
 my $out_fasta = $ARGV[2]; 
 
-if (@ARGV != 3){ die "requires 3 arguments:\n\nprotein fasta file\nuser-defined motif\nuser-defined outfile" }
- 
+
+if (@ARGV != 3){
+	die "requires 3 arguments:\n\n1) protein fasta file\n2) user-defined motif\n3) user-defined outfile\n\n";
+}
 
 
 #read fasta into hash
