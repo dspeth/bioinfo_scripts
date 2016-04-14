@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 # A script to extract reads that have BLAST/DIAMOND hits against a custom database
-# The script will read the entire read file into a hash, so might run into memory issues on enormous datasets
-
+# assumes sequences in fastQ files are all single line
+# previous version read the entire query dataset (raw reads) in a hash, but that wasn't usable.
 
 # requires:
 # 1) tabular blast output, with the query in the first column (standard)
@@ -19,6 +19,30 @@ if (@ARGV != 3){
 	die "requires 3 arguments:\n\n1) Tabular blast/diamond ouput file\n2) file containing sequencing reads used as BLAST/DIAMOND queries\n3) user-defined outfile\n\n";
 }
 
+
+# read tab file containing BLAST/DIAMOND result against seq set of interest (DB) 
+# write query ID and score into a hash for fast retrieval
+# prev_query is incprporated to deal with multiple hits against the same protein
+# or if you forgot to specify only 1 hit per query seq in your BLAST/DIAMOND
+my @hits;
+my %score;
+my $query;
+my $prev_query = "muck_and_mock";
+
+open BLAST, $blast_tab or die "no tabular blast file provided";
+HIT: 	while (my $line = <BLAST>){
+		chomp $line;
+		@hits = split('\t', $line);
+		$query = shift(@hits);
+		if ($query eq $prev_query){
+			next HIT;
+		}
+		else{
+			$score{$query} = pop(@hits);
+			$prev_query = $query;
+		}
+	}
+close BLAST;	
 
 # in case you put this script in a pipeline which has to deal both fasta and fastq files, determine filetype
 my $file_type;
@@ -36,12 +60,13 @@ else{
 	die "\nfile type of $read_file not recognized\ncheck file\n\n"
 }
 
-#read fasta/fastq into hash
-my %reads;
+#read fasta/fastq and print seq that match blast hits
 my $read_id;
 my @temp;
 my $temp_id;
+my $read_seq;
 my $line_count = 0;
+my $matches = 0;
 
 open READ_FILE, $read_file or die "no read file provided";
 SEQ: while (my $line = <READ_FILE>){
@@ -50,23 +75,51 @@ SEQ: while (my $line = <READ_FILE>){
 		if ($file_type eq "fastA"){
 			my $fc = substr($line, 0, 1);
 			if ($fc eq ">"){
-				@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
-				$temp_id = $temp[0];
-				$read_id = substr($temp_id, 1);
+				if ($matches == 1){ 				# $matches provides the test if a read matches. The following lines print the read belonging to the previous header
+					close OUT;
+					open OUT, ">> $out_fasta";
+					print OUT "$read_seq\n";
+					$matches = 0;				# we reset $matches for the new header
+				}
+				else {
+					@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
+					$temp_id = $temp[0];
+					$read_id = substr($temp_id, 1);
+					if (exists $score{$read_id}){ 
+						$matches = 1;
+						close OUT;
+						open OUT, ">> $out_fasta";
+						print OUT ">$read_id\n";
+					}
+					else {
+						next SEQ;
+					}
+				}
 			}
 			else{
-				$reads{$read_id} .= $line;
+				$read_seq .= $line;					# turns multiline fasta into single line fasta, which I prefer 
 			}
 		}
 		elsif ($file_type eq "fastQ"){
-			if ($line_count == 1){
+			if ($line_count == 1){						# counter keeps track of header/seq lines, as @ symbol is used in quality lines as well 
 				@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
 				$temp_id = $temp[0];
 				$read_id = substr($temp_id, 1);
+				if (exists $score{$read_id}){ 
+					$matches = 1;
+					close OUT;
+					open OUT, ">> $out_fasta";
+					print OUT ">$read_id\n";
+				}
 			}
 			elsif ($line_count == 2){
-				$reads{$read_id} = $line;
-			$line_count = $line_count - 3;
+				if ($matches == 1){ 
+					close OUT;
+					open OUT, ">> $out_fasta";
+					print OUT "$line\n";
+					$matches = 0;
+				}
+			$line_count = $line_count - 4;					# resets counter to only match the next actual read, while skipping the qual scores
 			}
 			else {
 				next SEQ;
@@ -74,25 +127,3 @@ SEQ: while (my $line = <READ_FILE>){
 		}
 	}	
 close READ_FILE;
-
-
-# runs through blast file and prints sequences from hash
-my @blast;
-my $query_read;
-my $prev_line = "start";
-
-open BLAST, $blast_tab or die "no tabular blast file provided";
-TAB:	while (my $line = <BLAST>){
-			chomp $line;
-			if ($line eq $prev_line){ 								# get rid of multiple hits in case you forgot to put only best hit
-				next TAB;
-			}
-			@blast = split('\t', $line);
-			$query_read = $blast[0];
-			if (exists($reads{$query_read})){
-				close OUT;
-				open OUT, ">> $out_fasta";
-				print OUT ">$query_read\n$reads{$query_read}\n";
-			} 
-		}
-close BLAST;	
