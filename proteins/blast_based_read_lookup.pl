@@ -80,6 +80,7 @@ SEQ: while (my $line = <READ_FILE>){
 					open OUT, ">> $out_fasta";
 					print OUT "$read_seq\n";
 					$matches = 0;				# we reset $matches for the new header
+					undef($read_seq);			#and do the same for $read_seq
 				}
 				else {
 					@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
@@ -97,7 +98,12 @@ SEQ: while (my $line = <READ_FILE>){
 				}
 			}
 			else{
-				$read_seq .= $line;					# turns multiline fasta into single line fasta, which I prefer 
+				if ($matches == 1){
+					$read_seq .= $line; # turns multiline fasta into single line fasta, which I prefer 
+				}
+				else {
+					next SEQ;
+				}
 			}
 		}
 		elsif ($file_type eq "fastQ"){
