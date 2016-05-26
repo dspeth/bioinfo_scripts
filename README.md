@@ -13,6 +13,6 @@ any questions or comments are welcome
 
 Daan
 
-d.speth _at_ science _dot_ ru _dot_ nl
+d.speth _at_ caltech _dot_ edu
 
 @daanspeth
