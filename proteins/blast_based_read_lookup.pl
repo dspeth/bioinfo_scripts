@@ -82,19 +82,17 @@ SEQ: while (my $line = <READ_FILE>){
 					$matches = 0;				# we reset $matches for the new header
 					undef($read_seq);			#and do the same for $read_seq
 				}
+				@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
+				$temp_id = $temp[0];
+				$read_id = substr($temp_id, 1);
+				if (exists $score{$read_id}){ 
+					$matches = 1;
+					close OUT;
+					open OUT, ">> $out_fasta";
+					print OUT ">$read_id\n";
+				}
 				else {
-					@temp = split(" ", $line);				# split header on spaces only take the first part, in case you're not blasting reads but sequences with longer headers
-					$temp_id = $temp[0];
-					$read_id = substr($temp_id, 1);
-					if (exists $score{$read_id}){ 
-						$matches = 1;
-						close OUT;
-						open OUT, ">> $out_fasta";
-						print OUT ">$read_id\n";
-					}
-					else {
-						next SEQ;
-					}
+					next SEQ;
 				}
 			}
 			else{
