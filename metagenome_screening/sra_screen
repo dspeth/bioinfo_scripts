@@ -64,10 +64,10 @@ do
 	# use tab delimited file for read lookup in the original file using custom perl script
 	if [ -e "$ACCESSION"_1.fastq ]
 	then
-		blast_based_read_lookup_new.pl tab_"$ACCESSION" "$ACCESSION"_1.fastq seqs_"$ACCESSION".fasta
+		blast_based_read_lookup.pl tab_"$ACCESSION" "$ACCESSION"_1.fastq seqs_"$ACCESSION".fasta
 		rm "$ACCESSION"_1.fastq
 	else 
-		blast_based_read_lookup_new.pl tab_"$ACCESSION" "$ACCESSION".fastq seqs_"$ACCESSION".fasta
+		blast_based_read_lookup.pl tab_"$ACCESSION" "$ACCESSION".fastq seqs_"$ACCESSION".fasta
 		rm "$ACCESSION".fastq
 	fi
 	
