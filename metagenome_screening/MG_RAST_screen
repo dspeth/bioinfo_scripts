@@ -56,7 +56,7 @@ do
         diamond view -a hits_"$ACCESSION" -o tab_"$ACCESSION"
 
 	# retrieve matching reads
-	blast_based_read_lookup_new.pl tab_"$ACCESSION" "$ACCESSION" seqs_"$ACCESSION".fasta	
+	blast_based_read_lookup.pl tab_"$ACCESSION" "$ACCESSION" seqs_"$ACCESSION".fasta	
 	rm "$ACCESSION"
 
 	#
