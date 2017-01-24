@@ -1,0 +1,6 @@
+## count the combined number of fasta sequences in all files in a directory
+grep -c ">" * | awk '{split($0, a, ":"); print a[2]}' | awk '{s+=$1} END {print s}'
+
+## split fasta files in two groups, containing more or less than 10 sequences
+mkdir under_10 over_10
+for i in *.fasta ; do TEST=$(grep -c ">" $i) ; if (( "$TEST" > 9 )) ; then mv $i over_10/ ; else mv $i under_10/ ; fi ; done
