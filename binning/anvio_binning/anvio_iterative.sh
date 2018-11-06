@@ -28,7 +28,7 @@
 #
 # requires all data in a single datadir, I use softlinks
 # assumes coupled paired end files (R1.fastq/R2.fastq)
-# calls one custom perl script (also in this directory)
+# calls one custom perl script (table_seq_lookup.pl also in this directory)
 
 
 # set our defaults for the options
@@ -117,7 +117,7 @@ fi
 bamm filter -b raw/*bam -o id95_len80/ --percentage_id 0.95 --percentage_aln 0.80
 bamm parse -c coverage.tsv -m opmean -b id95_len80/*bam
 awk '$2 >= 1000 { print $0 }' coverage.tsv | awk '$3 >= 10 { print $0 }' > selected_contigs
-blast_based_read_lookup_new.pl selected_contigs contigs.fa selected_contigs.fa
+table_seq_lookup.pl selected_contigs contigs.fa selected_contigs.fa
 
 # prepare to map all reads to your selected contigs
 cd ..
