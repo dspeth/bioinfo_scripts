@@ -98,6 +98,12 @@ SEQ: while (my $line = <READ_FILE>){
 			else{
 				if ($matches == 1){
 					$read_seq .= $line; # turns multiline fasta into single line fasta, which I prefer 
+					if (eof(READ_FILE)) { # without this if statement the last sequence of a file will be lost
+						close OUT;
+						open OUT, ">> $out_fasta";
+						print OUT "$read_seq\n";
+						close OUT;
+					}
 				}
 				else {
 					next SEQ;
