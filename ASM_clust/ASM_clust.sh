@@ -41,17 +41,11 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
-notExists() {
-	  [ ! -f "$1" ]
-}
-
+# test whether required software is in path
 hasCommand() {
 	  command -v "$1" >/dev/null 2>&1 || { echo "Please make sure that $1 is in \$PATH."; exit 1; }
 }
 
-notExists "$1" && echo "$1 not found!" && exit 1;
-
-# test whether required software is in path
 hasCommand bhtsne.py
 hasCommand tab_seq_lookup.pl
 hasCommand merge_tab_files.pl
