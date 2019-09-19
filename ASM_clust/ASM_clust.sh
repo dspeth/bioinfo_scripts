@@ -41,6 +41,10 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
+notExists() {
+	  [ ! -f "$1" ]
+}
+
 hasCommand() {
 	  command -v "$1" >/dev/null 2>&1 || { echo "Please make sure that $1 is in \$PATH."; exit 1; }
 }
@@ -49,8 +53,8 @@ notExists "$1" && echo "$1 not found!" && exit 1;
 
 # test whether required software is in path
 hasCommand bhtsne.py
-hasCommand blast_based_read_lookup_new.pl
-hasCommand merge_tab_files_molyb2.pl
+hasCommand tab_seq_lookup.pl
+hasCommand merge_tab_files.pl
 
 if [[ "$ALIGN" == "mmseqs2" ]]; then
 	hasCommand mmseqs
@@ -102,7 +106,7 @@ if [ ! -z $FASTAREF ] ; then
 	perl -p -i -e 's/\>//g' "$BASE"_"$SUBSET"_ids
 else
 	shuf -n $SUBSET "$BASE"_ids > "$BASE"_"$SUBSET"_ids
-	blast_based_read_lookup_new.pl "$BASE"_"$SUBSET"_ids $INPUT "$BASE"_"$SUBSET"_ids.faa
+	tab_seq_lookup.pl "$BASE"_"$SUBSET"_ids $INPUT "$BASE"_"$SUBSET"_ids.faa
 fi
 
 mv "$BASE"_"$SUBSET"_ids.faa "$BASE"_"$SUBSET"_ids "$BASE"_ids "$BASE"_"$ALIGN"
@@ -132,7 +136,7 @@ while read id ; do grep -F "$id" "$BASE"_align > temp_"$id" ; done < "$BASE"_"$S
 for i in temp_* ; do awk -v filt="${i:5}" 'BEGIN{FS=OFS="\t"} $2==filt {print $0}' $i > hits_"${i:5}" ; done
 rm temp_*
 
-for i in hits_* ; do merge_tab_files_molyb2.pl "$BASE"_ids "$i" score_"${i:5}" ; done
+for i in hits_* ; do merge_tab_files.pl "$BASE"_ids "$i" score_"${i:5}" ; done
 echo "seqID" >> "$BASE"_matrix
 cat "$BASE"_ids >> "$BASE"_matrix
 for i in score_* ; do cut -f 2 "$i" | paste "$BASE"_matrix - > "$BASE"_matrix_temp ; mv "$BASE"_matrix_temp "$BASE"_matrix ; done
