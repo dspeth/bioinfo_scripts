@@ -41,6 +41,14 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
+#test whether input fasta file exists 
+INPUT="$1"
+
+notExists() {
+          [ ! -f "$1" ]
+}
+notExists "$INPUT" && echo "$INPUT might not exist, please check file" && exit 1;
+
 # test whether required software is in path
 hasCommand() {
 	  command -v "$1" >/dev/null 2>&1 || { echo "Please make sure that $1 is in \$PATH."; exit 1; }
