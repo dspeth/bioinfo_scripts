@@ -146,4 +146,9 @@ cut -f 2- "$BASE"_matrix > "$BASE"_matrix_wo_id
 
 ##### Run TSNE
 bhtsne.py -v -p $PERP -m $MAX_ITER -i "$BASE"_matrix_wo_id -o "$BASE"_matrix_wo_id_p"$PERP"_m"$MAX_ITER"
-cp "$BASE"_matrix_wo_id_p"$PERP"_m"$MAX_ITER" ../"$BASE"_"$ALIGN"_tsne_p"$PERP"_m"$MAX_ITER"
+
+##### combine and format final tsne matrix file, and place in original directory
+echo -e id' \t 'tsne_1' \t 'tsne_2 > temp_header
+paste "$BASE"_ids "$BASE"_matrix_wo_id_p"$PERP"_m"$MAX_ITER" > "$BASE"_"$ALIGN"_tsne_p"$PERP"_m"$MAX_ITER"_no_header
+cat temp_header "$BASE"_"$ALIGN"_tsne_p"$PERP"_m"$MAX_ITER"_no_header > "$BASE"_"$ALIGN"_tsne_p"$PERP"_m"$MAX_ITER"
+cp "$BASE"_"$ALIGN"_tsne_p"$PERP"_m"$MAX_ITER" ../
