@@ -10,10 +10,12 @@ Fasta files are processed with ASM_clust.sh, which then:
 3) combines all scores into a matrix (inserting 0 for query-database pairs that did not produce an alignment)
 4) reduces the matrix to 2 dimensions using t-SNE (Van der Maaten and Hinton 2008; Van der Maaten 2014)
 
-For flexible usage, ASM-Clust supports alignment using:
-1) MMSeqs2 (Steinegger and Söding 2017) (default aligner)
-2) DIAMOND (Buchfink, Xie, and Huson 2015)
-3) BLAST (Altschul et al. 1990)
+External dependencies for ASM-clust are:
+1) the python wrapper for the Barnes-Hut implementation of t-SNE available here :(https://github.com/lvdmaaten/bhtsne)
+2) Alignment software. For flexible usage, ASM-Clust supports alignment using:
+    1) MMSeqs2 (Steinegger and Söding 2017) (default aligner)
+    2) DIAMOND (Buchfink, Xie, and Huson 2015)
+    3) BLAST (Altschul et al. 1990)
 
 Other user-defined options are:
 - the number of sequences in the subset (default 1000)
