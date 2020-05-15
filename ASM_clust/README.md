@@ -1,5 +1,6 @@
-### ASM clust scripts have been moved to their own repo at https://github.com/dspeth/ASM_clust
-### please use those versions, rather than the ones in this directory
+**Note:**   
+**ASM clust scripts have been moved to their own repo at https://github.com/dspeth/ASM_clust**.    
+**please use those versions, rather than the scripts in this directory**
 
 
 
