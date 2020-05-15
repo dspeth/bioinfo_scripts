@@ -1,3 +1,8 @@
+### ASM clust scripts have been moved to their own repo at https://github.com/dspeth/ASM_clust
+### please use those versions, rather than the ones in this directory
+
+
+
 ASM-clust
 
 the three scripts in this directory comprise ASM-clust, an approach to de novo classify complex protein superfamilies
