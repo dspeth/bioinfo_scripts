@@ -3,11 +3,11 @@ use strict;
 use warnings;
 
 
-# a quick and dirty script modified from a previously existing script to turn a protein alignment into SR4 mucleotide encoding
+# A quick and dirty script modified from a previously existing script to turn a protein alignment into SR4 mucleotide encoding.
 # Usable to "trick" phylogeny software into accepting a recoded alignment as nucleotides.
-# If phylogeny software accept multi state alignments (e.g. RAxML), use SR4_numerical_recode.pl
+# If phylogeny software accepts multi state alignments (e.g. RAxML), use SR4_numerical_recode.pl
 #
-# input: alignment fasta file
+# input: protein alignment fasta file
 #
 # output: recoded alignment file
 #
@@ -17,8 +17,8 @@ use warnings;
 
 if (scalar @ARGV != 2){
 	die "\nRecodes a protein alignment to 4-state SR4 recoding in nucleotide form\nCan be used when phylogeny software doesn't support multi-state alignments\n
-  Of multi-state alignments are supported (e.g. RAxML), use SR4_numerical_recode.pl\n\n
-  requires two arguments:\n1) fasta file\n2) user-defined outfile\n\nAGNPST -> A\nCHWY -> C\nDEKQR -> G\nFILMV -> T";
+  If multi-state alignments are supported (e.g. RAxML), use SR4_numerical_recode.pl\n\n
+  requires two arguments:\n1) protein alignment fasta file\n2) user-defined outfile\n\nAGNPST -> A\nCHWY -> C\nDEKQR -> G\nFILMV -> T";
 } 
 
 # files
