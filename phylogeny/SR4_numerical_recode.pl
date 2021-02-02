@@ -15,9 +15,9 @@ use warnings;
 # requirements
 
 if (scalar @ARGV != 2){
-	die "\nRecodes a protein alignment to 4-state SR4 recoding in nucleotide form\nCan be used when phylogeny software supports multi-state alignments\n
-  if multi-state alignments are not supported, SR4_nuc_recode.pl can be used\n\n
-  requires two arguments:\n1) protein alignment fasta file\n2) user-defined outfile\n\nAGNPST -> 0\nCHWY -> 1\nDEKQR -> 2\nFILMV -> 3";
+die "\nRecodes a protein alignment fasta file to 4-state SR4 recoding in numerical form\nCan be used when phylogeny software supports multi-state alignments\n
+if multi-state alignments are not supported, SR4_nuc_recode.pl can be used\n\n
+requires two arguments:\n1) protein alignment fasta file\n2) user-defined outfile\n\nAGNPST -> 0\nCHWY -> 1\nDEKQR -> 2\nFILMV -> 3\n\n";
 } 
 
 
