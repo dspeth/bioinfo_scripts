@@ -13,6 +13,6 @@ any questions or comments are welcome
 
 Daan
 
-dspeth _at_ caltech _dot_ edu
+dspeth _at_ mpi-bremen _dot_ de
 
 @daanspeth
