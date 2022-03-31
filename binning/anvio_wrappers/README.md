@@ -8,7 +8,7 @@ That said, they have proven useful to me.
 ### requirements
 These scripts were always written for specific use on the server I used myself, and will not work out of the box. 
 They require an installation of conda, and environments called "assembly", "read_mapping", and "anvio_7".
-Software called is spades, coverm, samtools, and anvio.
+Scripts use spades, coverm, samtools, bbmap, anvio, and a personal utility script "blast_based_read_lookup_new.pl" (included).
 
 
 ### anvio_map_reads_to_bin.sh
